@@ -1,10 +1,10 @@
 
 ;                .filename "VADERETRO"
-                ;ORG	&4100
+                ;ORG	#4100
 
 		
 
-mc_wait_flyback equ 	&bd19
+mc_wait_flyback equ 	#bd19
 
 PLAYER:         DI
 
@@ -13,8 +13,8 @@ PLAYER:         DI
 
 ; MUSICA DATOS INICIALES
 
-		LD	DE,&0020		;  Nº BYTES RESERVADOS POR CANAL
-;		LD	DE,&0200		;  Nº BYTES RESERVADOS POR CANAL
+		LD	DE,#0020		;  Nï¿½ BYTES RESERVADOS POR CANAL
+;		LD	DE,#0200		;  Nï¿½ BYTES RESERVADOS POR CANAL
                 LD      HL,BUFFER_DEC       	;* RESERVAR MEMORIA PARA BUFFER DE SONIDO!!!!!
                 LD      (CANAL_A),HL
                 
@@ -27,7 +27,7 @@ PLAYER:         DI
                 ADD     HL,DE       	
                 LD      (CANAL_P),HL 
 
-                ;LD      A,0             	;* CANCION Nº 0
+                ;LD      A,0             	;* CANCION Nï¿½ 0
 		LD A,(INS_cancion); variable de la rutina MUSIC-ON de la libreria 8bp
                 CALL    CARGA_CANCION
 
@@ -49,7 +49,7 @@ LOOP:		CALL 	mc_wait_flyback
 		JR	LOOP
 
 
-BUFFER_DEC:     DS      &20*4		;************************* mucha atencion!!!!
+BUFFER_DEC:     DS      #20*4		;************************* mucha atencion!!!!
 					; aqui se decodifica la cancion hay que dejar suficiente espacio libre.
 					; son 128 bytes
 					;*************************

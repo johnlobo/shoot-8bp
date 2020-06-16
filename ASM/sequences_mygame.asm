@@ -15,6 +15,8 @@
 _SEQUENCES_LIST
 dw SOLDADO_R0,SOLDADO_R2,SOLDADO_R1,SOLDADO_R2,0,0,0,0 ;1
 dw SOLDADO_L0,SOLDADO_L2,SOLDADO_L1,SOLDADO_L2,0,0,0,0 ;2
+;dw G_ship00_1,0,0,0,0,0,0,0; 3
+;dw G_ship00_2,0,0,0,0,0,0,0; 3
 
 ;-------- MACRO SECUENCIAS ----------------------
 ; son grupos de secuencias, una para cada direccion
