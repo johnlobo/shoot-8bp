@@ -20,10 +20,19 @@ dw G_explosion_1;23
 dw G_explosion_2;24
 dw G_explosion_3;25
 dw G_explosion_4;26
+dw G_heart;27
+dw G_green_flag;28
+dw G_red_flag;29
+dw G_skull_still;30
+dw G_skull_left0;31
+dw G_skull_left1;32
+dw G_skull_right0;33
+dw G_skull_right1;34
+dw G_baddie_shot;35
+
 ;;
 ;; Explosion
 ;;
-
 G_explosion_0
 db 4 ; ancho
 db 8 ; alto
@@ -86,6 +95,117 @@ db #00, #00, #00, #00
 db #00, #00, #00, #45
 db #00, #51, #00, #00
 db #22, #00, #00, #00
+
+;;
+;; Heart
+;;
+
+G_heart
+db 3 ; ancho
+db 5 ; alto
+db &51, &11, &00
+db &B3, &33, &22
+db &11, &33, &00
+db &00, &22, &00
+db &00, &22, &00
+
+;;
+;; Flags
+;;
+
+G_green_flag
+db 2 ; ancho
+db 5 ; alto
+db &00, &D7
+db &41, &57
+db &83, &57
+db &00, &55
+db &00, &55
+
+G_red_flag
+db 2 ; ancho
+db 5 ; alto
+db &00, &77
+db &11, &77
+db &33, &77
+db &00, &55
+db &00, &55
+
+;;
+;; Skull
+;;
+
+G_skull_still
+db 6 ; ancho
+db 8 ; alto
+db &00, &55, &FF, &FF, &00, &00
+db &00, &FF, &FF, &FF, &AA, &00
+db &00, &EA, &D5, &C0, &AA, &00
+db &00, &FF, &FF, &FF, &AA, &00
+db &00, &FF, &AA, &FF, &AA, &00
+db &00, &55, &FF, &FF, &00, &00
+db &00, &00, &AA, &AA, &00, &00
+db &00, &00, &FF, &AA, &00, &00
+
+G_skull_left0
+db 6 ; ancho
+db 8 ; alto
+db &55, &FF, &FF, &00, &00, &00
+db &FF, &FF, &FF, &AA, &00, &00
+db &EA, &55, &80, &AA, &00, &00
+db &FF, &FF, &FF, &BB, &2A, &00
+db &FF, &AA, &FF, &BB, &2A, &2A
+db &55, &FF, &FF, &73, &15, &00
+db &00, &AA, &BB, &B7, &2A, &2A
+db &00, &FF, &BB, &2A, &15, &00
+
+G_skull_left1
+db 6 ; ancho
+db 8 ; alto
+db &55, &FF, &FF, &00, &00, &00
+db &FF, &FF, &FF, &AA, &00, &00
+db &EA, &55, &80, &AA, &00, &00
+db &FF, &FF, &FF, &AA, &15, &00
+db &FF, &AA, &FF, &BB, &2A, &2A
+db &55, &FF, &FF, &73, &15, &00
+db &00, &AA, &BB, &B3, &2A, &2A
+db &00, &FF, &BB, &B7, &2A, &00
+
+G_skull_right0
+db 6 ; ancho
+db 8 ; alto
+db &00, &00, &55, &FF, &FF, &00
+db &00, &00, &FF, &FF, &FF, &AA
+db &00, &00, &AA, &D5, &40, &AA
+db &00, &3B, &FF, &FF, &FF, &AA
+db &2A, &3B, &FF, &AA, &FF, &AA
+db &15, &51, &77, &FF, &FF, &00
+db &2A, &3F, &B3, &AA, &AA, &00
+db &15, &00, &3B, &FF, &AA, &00
+
+G_skull_right1
+db 6 ; ancho
+db 8 ; alto 
+db &00, &00, &55, &FF, &FF, &00
+db &00, &00, &FF, &FF, &FF, &AA
+db &00, &00, &AA, &D5, &40, &AA
+db &15, &00, &FF, &FF, &FF, &AA
+db &2A, &3B, &FF, &AA, &FF, &AA
+db &15, &51, &77, &FF, &FF, &00
+db &2A, &3B, &B3, &AA, &AA, &00
+db &00, &3F, &B3, &FF, &AA, &00
+
+;;
+;; BADDIE SHOT
+;;
+
+G_baddie_shot
+db 2 ; ancho
+db 5 ; alto
+db &11, &22
+db &73, &B3
+db &73, &B3
+db &11, &22
 
 
 ; ahora las imagenes
