@@ -13,9 +13,8 @@
 
 ;--------------secuencias de animacion  --------
 _SEQUENCES_LIST
-dw G_black4x8,1,0,0,0,0,0,0;1
-dw G_black8x14,1,0,0,0,0,0,0;2
-dw G_explosion_0,G_explosion_1,G_explosion_2,G_explosion_3,G_explosion_4,G_black4x8,1,0;3
+dw BORRA_C,1,0,0,0,0,0,0;1
+dw G_explosion_0,G_explosion_1,G_explosion_2,G_explosion_3,G_explosion_4,G_black4x8,1,0 ;2
 ;dw G_ship00_1,0,0,0,0,0,0,0; 3
 ;dw G_ship00_2,0,0,0,0,0,0,0; 3
 
