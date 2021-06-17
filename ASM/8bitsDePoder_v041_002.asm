@@ -14,7 +14,7 @@
 ; ------------------------------------------------------------------------------------------------------------
 ; las funciones usables desde basic las denoto con etiquetas asm con formato  "_<function name>"
 ;
-; tras invocar "call _INSTALL_RSX" desde BASIC, usando "CALL #6b78" dispondras de los siguientes comandos
+; tras invocar "call _INSTALL_RSX" desde BASIC, usando "CALL &6b78" dispondras de los siguientes comandos
 ;
 ;|ANIMA, #                          -> cambia el fotograma de un sprite segun su secuencia
 ;|ANIMALL                           -> cambia el fotograma de los sprites con flag animacion activado
@@ -61,7 +61,7 @@
 ;  SAVE "mapa.bin",b,42040,500 tu mapa
 ;
 ; Para salvar tu juego mas facil puedes salvar todo el binario de una sola vez
-;  SAVE "tujuego.bin",b,24000,18620,#6b78
+;  SAVE "tujuego.bin",b,24000,18620,&6b78
 ;
 ; Por ultimo, es acosejable que tu programa se cargue mediante un "cargador" que carga la
 ; libreria 8bp y los sprites y la musica, y a continuacion tu programa
@@ -81,9 +81,9 @@
 ; ----------------------------------------------------------------------
 ; AMSTRAD CPC464 MAPA DE MEMORIA de 8BP
 ;
-; #FFFF +---------- 
+; &FFFF +---------- 
 ;       |  pantalla + 8 segmentos ocultos de 48bytes cada uno
-; #C000 +---------- 
+; &C000 +---------- 
 ;       |  system (simbolos redefinibles, etc)
 ; 42619 +---------- 
 ;       | banco de 40 estrellas (desde 42540 hasta 42619 = 80bytes)
@@ -140,7 +140,7 @@
 _HIDDEN_SCREEN_SEGMENTS
 ;-----------------------------------------
 ;-----------------------------------------
-org #C7D0
+org &C7D0
 _SCREEN_0_BEGIN
 ; ROUTEALL
 ;**********
@@ -176,9 +176,9 @@ SPR_anchofinal:; ancho final del sprite tras el clipping
 SPR_altofinal:; alto final del sprite tras el clipping
 		db 0
 SPR_imagefinal: ; direccion de dibujo del sprite tras el clipping
-		dw #0000
+		dw &0000
 SPR_dirpant:
-		dw #0000; direccion de pantalla donde se va a imprimir
+		dw &0000; direccion de pantalla donde se va a imprimir
 ; variables adicionales utiles para la sobreescritura
 ;-----------------------------------------------
 SPR_status	db 1; flags									***
@@ -236,7 +236,7 @@ _SCREEN_0_END; esta ultima instruccion debe ensamblarse como mucho en la C7FF
 	NOP
 ;-----------------------------------------
 
-org #CFD0
+org &CFD0
 _SCREEN_1_BEGIN 
 
 
@@ -318,7 +318,7 @@ _SCREEN_1_END ; esta ultima instruccion debe ensamblarse como mucho en la CFFF
 	NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #D7D0
+org &D7D0
 _SCREEN_2_BEGIN 
 
 
@@ -346,21 +346,24 @@ MOR_x: 	dw 0;
 PS2_spid	db 0
 
 
-; 9 bytes para un buffer de sonido de la libreria minibasic.h. es la direccion d7de
-_SOUND_BUF	db 0,0,0,0,0,0,0,0,0
+; PRINTSP
+;************
+PRINTSP_flag db 0; este flag es para que printspall sepa que no debe animar pues la llamada viene de printsp
+
+; para el player de musica
+;BUFFER_DEC_CANAL_A ds 32
+
 
 _SCREEN_2_END; esta ultima instruccion debe ensamblarse como mucho en la D7FF
 	NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #DFD0
+org &DFD0
 _SCREEN_3_BEGIN 
 
-;  DEL PLAYER DE MUSICA WYZ
-;*************************
-SONIDO_REGS DW 0
-EFECTO_REGS DW 0
-PUNTERO_EFECTO DW 0
+; para el player de musica
+;BUFFER_DEC_CANAL_C ds 32
+
 
 ;*******************
 
@@ -377,40 +380,21 @@ M2S_Xinput		dw 0; xo en invocacion
 
 
 
-; COLSPALL (COA)
-;******************
-COA_spid	db 0; contador de sprites
+;  DEL PLAYER DE MUSICA WYZ. segmento 3
+;*************************
+;SONIDO_REGS DW 0
+;EFECTO_REGS DW 0
+;PUNTERO_EFECTO DW 0
 
 
 
-;INSTALL_INTERRUPT
-;**********************
-;INS_counter	db 0;ultimo instante en que se toco la musica
 
-
-; SORTY
-;********************************
-SOR_yant	dw 0 ; creo que esta se puede poner global
-SOR_count	db 0; contador de sprites a ordenar.  
-SOR_ant		dw 0; direccion de coordy de sprite anterior
-SOR_sig		dw 0; direccion de coordy de sprite siguiente
-
-
-
-SOR_buffer	dw 0; buffer de 2 bytes. me la he llevado a global
-
-
-; PRINTAT
-;****************************
-PAT_coordx dw 0
-PAT_coordy dw 0
-PAT_from    db 0
 
 _SCREEN_3_END; esta ultima instruccion debe ensamblarse como mucho en la DFFF
 	NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #E7D0
+org &E7D0
 _SCREEN_4_BEGIN 
 
 
@@ -475,8 +459,13 @@ _SCREEN_4_END; esta ultima instruccion debe ensamblarse como mucho en la E7FF
 	NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #EFD0
+org &EFD0
 _SCREEN_5_BEGIN 
+; PRINTAT
+;****************************
+PAT_coordx dw 0
+PAT_coordy dw 0
+PAT_from    db 0
 
 ; variables locales comando UPDATE_MAP
 ;-------------------------------------
@@ -539,8 +528,11 @@ _SCREEN_5_END; esta ultima instruccion debe ensamblarse como mucho en la EFFF
 		NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #F7D0
+org &F7D0
 _SCREEN_6_BEGIN 
+
+; 9 bytes para un buffer de sonido de la libreria minibasic.h. es la direccion d7de
+;_SOUND_BUF	db 0,0,0,0,0,0,0,0,0,0 ; le doy un byte mas
 
 ROU_NUM_PASOS	db 0; variable temporal de numero de pasos
 
@@ -563,12 +555,15 @@ route_sp13	db 0,0
 route_sp14	db 0,0
 route_sp15	db 0,0
 
+; 9 bytes para un buffer de sonido de la libreria minibasic.h. es la direccion d7de
+; ojo esta es la f7f1. la he cambiado porque no funcionaba bien. puede que consuma mas de 9 bytes?
+_SOUND_BUF	db 0,0,0,0,0,0,0,0,0,0 ; le doy un byte mas
 
 _SCREEN_6_END; esta ultima instruccion debe ensamblarse como mucho en la F7FF
 	NOP
 ;-----------------------------------------
 ;-----------------------------------------
-org #FFD0
+org &FFD0
 _SCREEN_7_BEGIN 
 
 _ROUTE_TABLE_16a31;
@@ -590,6 +585,28 @@ route_sp30	db 0,0
 route_sp31	db 0,0
 
 
+; COLSPALL (COA)
+;******************
+COA_spid	db 0; contador de sprites
+
+
+
+;INSTALL_INTERRUPT
+;**********************
+;INS_counter	db 0;ultimo instante en que se toco la musica
+
+
+; SORTY
+;********************************
+SOR_yant	dw 0 ; creo que esta se puede poner global
+SOR_count	db 0; contador de sprites a ordenar.  
+SOR_ant		dw 0; direccion de coordy de sprite anterior
+SOR_sig		dw 0; direccion de coordy de sprite siguiente
+
+
+
+SOR_buffer	dw 0; buffer de 2 bytes. me la he llevado a global
+
 _SCREEN_7_END; esta ultima instruccion debe ensamblarse como mucho en la FFFF
 _SCREEN__END; esta ultima instruccion debe ensamblarse como mucho en la FFFF
 	NOP
@@ -606,27 +623,13 @@ SOR_DIRSTART	dw 0; direccion del sprite anterior al que se va a empezar a ordena
 ; variables locales de _MUSIC_ON()
 ;-------------------------------------
 INS_counter	db 0;ultimo instante en que se toco la musica. de una invocacion a otra hay que mantener este valor
-;INS_model	dw #B939; model 464=>#B939 ,model 6128=> #B941. al instalar la interrupcion se corrige solo.
+;INS_model	dw &B939; model 464=>&B939 ,model 6128=> &B941. al instalar la interrupcion se corrige solo.
 INS_cancion	db 0
 INS_speed	db 5; una velocidad "normal" es 6. si ponemos 5 estamos acelerando un poco la musica
 
 
-; de colspall
-COA_colider	dw 0; direccion de memoria de colider
+; ALGUNAS VARS LCALES
 
-; de colay
-COL_umbral	db 32; por defecto es el espacio en blanco " ", cuyo ASCII es 32
-var_col		dw 0; //direccion de la variable col
-col_numsp	db 0; guardamos el id sprite de una llamada a la siguiente para ganar velocidad v37
-
-; variables de la funcion SET_LIMITS
-;-------------------------------------
-SPR_DIFX	db 80
-SPR_DIFY	db 200
-
-; variables de autoall
-;-----------------------------------
-MOA_flag_route	db 0; flag de invocacion a ROUTEALL
 
 ;=================================================
 ; Tabla de alturas de sprites. esta tabla se ubica en la memoria de sprites
@@ -724,7 +727,7 @@ _SET_HEIGHT
 ;-------------------------------------
 add_counter db 31
 _SUB_HEIGHTS
-		ld hl, #42ed ; sbc hl,bc = #ed42
+		ld hl, &42ed ; sbc hl,bc = &ed42
 		ld (add_oper) , hl
 		jr _OPER_HEIGHTS
 
@@ -855,29 +858,18 @@ _SET_BACKUP_LIMITS
 ;============================================================================
 
 
-ROU_V34
-	;cp 251
-	;JP NZ, ROU_no251
-	;push hl
-	;push de
-	;push AF
-	ld a, (ROU_SPID)
-	;ld (ix+0),a
-	
-	;CALL _ANIMA_SP
-	CALL ANS_a
-	;pop AF
-	;pop de
-	;pop hl
-	jP ROU_kkk
+;ROU_V34
+;	ld a, (ROU_SPID)
+;	CALL ANS_a
+;	jP ROU_kkk
 
-ROU_INIRUTA
-	; venimos desde _UPDATE_SEGMENT porque se ha detectado un comienzo de ruta
-	ld a,255; asi al sumar un 1 pasara a cero
-	ld (ROU_SEG),a
-	xor a; nuevo paso
-	;JR _UPDATE_SEGMENT
-	Jp _UPDATE_SEGMENT ; v28
+;ROU_INIRUTA
+;	; venimos desde _UPDATE_SEGMENT porque se ha detectado un comienzo de ruta
+;	ld a,255; asi al sumar un 1 pasara a cero
+;	ld (ROU_SEG),a
+;	xor a; nuevo paso
+;	;JR _UPDATE_SEGMENT
+;	Jp _UPDATE_SEGMENT ; v28
 
 
 
@@ -890,7 +882,7 @@ ROU_INIRUTA
 ;==================
 ;GM_mode db 0 --> esta en segmento oculto
 _GET_MODE
-	call #bc11
+	call &bc11
 	ld (GM_mode),a
 	ret
 
@@ -1057,7 +1049,7 @@ m1PNTF_transp	inc de
 ;============================================================================
 m1_FLIP
 
-		and %10001000
+		and a,%10001000
 		;srl a
 		;srl a
 		;SRL a
@@ -1070,20 +1062,20 @@ m1_FLIP
 		ld c,a
 	
 		ld a,(HL)
-		and %01000100
+		and a,%01000100
 		srl a
 		or c
 		ld c,a
 
 		ld a,(HL)
-		and %00100010
+		and a,%00100010
 		ADD A,A
 		or c
 		ld c,a
 	
 
 		ld a,(HL)
-		and %00010001
+		and a,%00010001
 		ADD A,A
 		ADD A,A
 		ADD A,A
@@ -1094,8 +1086,8 @@ m1_FLIP
 m1_TRANSP
 
 		ld c, a; guarda  pixel en C		
-m1PTR2_bin1	;and %11000000; o bien %11001100
-		and %11110000; 
+m1PTR2_bin1	;and a,%11000000; o bien %11001100
+		and a,%11110000; 
 		JR Z,m1PTR2_fondo; todo ceros es para reestablecer el fondo en los 4 pixels transp o no transp
 		; NOTA he observado que siembre salta a PTR_fondo porque pinto con colores que no usan los bits de fondo
 		; pero si hubiese color 1, entonces se usaria para redondear el contorno de sprites
@@ -1118,8 +1110,8 @@ m1PTR2_bin2	;cp %11000000; si los dos son 1, entonces no hacemos nada, no hay qu
 		; es decir, no alterar nada
 		res 4,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and %00010001; pixel 4
-		or c; no modifico los 1's del pixel del sprite, almacenados en c
+		and a, %00010001; pixel 4
+		or  a,c; no modifico los 1's del pixel del sprite, almacenados en c
 		ld c,a
 m1PTR2_5
 		bit 5,c; comprueba el bit 5 
@@ -1128,8 +1120,8 @@ m1PTR2_5
 		; es decir, no alterar nada
 		res 5,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and %00100010; pixel 5
-		or c; no modifico los 1's del pixel del sprite, almacenados en c
+		and a, %00100010; pixel 5
+		or  a,c; no modifico los 1's del pixel del sprite, almacenados en c
 		ld c,a
 
 m1PTR2_6
@@ -1139,8 +1131,8 @@ m1PTR2_6
 		; es decir, no alterar nada
 		res 6,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and %01000100; pixel 5
-		or c; no modifico los 1's del pixel del sprite, almacenados en c
+		and a, %01000100; pixel 5
+		or  a,c; no modifico los 1's del pixel del sprite, almacenados en c
 		ld c,a
 m1PTR2_7
 		bit 7,c; comprueba el bit 5 
@@ -1149,8 +1141,8 @@ m1PTR2_7
 		; es decir, no alterar nada
 		res 7,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and %10001000; pixel 7
-		or c; no modifico los 1's del pixel del sprite, almacenados en c
+		and a, %10001000; pixel 7
+		or  a,c; no modifico los 1's del pixel del sprite, almacenados en c
 
 
 		;ld c,a
@@ -1162,11 +1154,11 @@ m1PTR2_7
 m1PTR2_fondo	ld a, (DE); (DE) contiene el fondo "manchado" con restos del sprite en el frame anterior
 		
 
-m1PTR2_bin3	;and %11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
+m1PTR2_bin3	;AND A,%11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
 		
-		and %11110000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
+		AND A,%11110000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
 		; el orden es 00221133	
-		or c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
+		or a,c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
 
 		ret
 
@@ -1176,11 +1168,11 @@ m1PTR2_bin3	;and %11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1
 ;=============================================================================================================
 ;by default, interrupts are enabled. 300 times per second, the Z80 will internally execute the following instructions :
 ; 	di
-; 	call #38
-;When Amstrad CPC is started up, we see that at #38 adress there is this instruction :
-; jp #B941 (in 6128) or JP #b939 (in 464)
-;#B941 adress is part of Amstrad CPC firmware code, that will do internal management of the CPC.
-;To implement our own interrupts, the idea is to redirect the jump from #B941 adress to our own code 
+; 	call &38
+;When Amstrad CPC is started up, we see that at &38 adress there is this instruction :
+; jp &B941 (in 6128) or JP &b939 (in 464)
+;&B941 adress is part of Amstrad CPC firmware code, that will do internal management of the CPC.
+;To implement our own interrupts, the idea is to redirect the jump from &B941 adress to our own code 
 
 ;function body
 ;-------------------------------------
@@ -1190,12 +1182,12 @@ UNI:
 		di
 		call _SALTO_INT
 		ld hl, (sal_dir)
-		ld (#39),hl
+		ld (&39),hl
 		ei
 		; ahora voy a vaciar el buffer de sonido para que deje de sonar
-		;call #bca7 ; rutina de firmware , valida para 464 y 6128
+		;call &bca7 ; rutina de firmware , valida para 464 y 6128
 		;ret
-		JP #bca7; optimize call +ret
+		JP &bca7; optimize call +ret
 
 
 
@@ -1491,14 +1483,14 @@ AJS_finajustepos
 _INSTALL_RSX2
 		ld bc, RSX_TABLE
 		ld HL, RSX_space
-		call #bcd1
+		call &bcd1
 
 		; ordenamiento de la tabla de sprites
 		;xor a; mode default de ordenamiento ( esto es a=0)
 		;ld (SOR_mode),a
 		;call _SORTY; se ordenan los sprites del 0 al 31
 		;ret
-		ld a, #36
+		ld a, &36
 		ld (SOR_RESET),a
 		CALL _SORTY ; optimize call +ret
 		xor a
@@ -1705,7 +1697,7 @@ PAT_fin
 ; un segmento es una imagen que puede tener cualquier alto y ancho pero en sus datos solo se encuentra
 ; la primera linea, que se ha de imprimir una y otra vez, tantas veces como la altura tenga el segmento
 ; 
-; Adicionalmente un segmento se puede  "tor cer", util para pintar curvas
+; Adicionalmente un segmento se puede  "torcer", util para pintar curvas
 ; para ello el primer byte de los datos de la imagen debe ser el deltax
 ; dicho deltax es un byte con signo (-127..+127)
 ;
@@ -1739,8 +1731,8 @@ _3D_PAINT_SEGMENT:  ; dibujar en pantalla el sprite de tipo segmento
 		;ld a, (SPR_STATUS)
 		;and 64
 		;JR Z, PNTS_notr
-		;ld a,#cd
-		;ld (pnts_PINTA_NOTRANSP), a;#CD ; metemos call
+		;ld a,&cd
+		;ld (pnts_PINTA_NOTRANSP), a;&CD ; metemos call
 		;ld HL, PINTA_SEG_TR
 		;ld (pnts_PINTA_NOTRANSP+1), HL ; metemos la direccion del call
 
@@ -1822,8 +1814,8 @@ PNTS_3D
 
 		RET NZ; aun negativo. muy lejos como para pintarlo (x<-127)
 		; si es negativo queda pasarlo a un byte
-		; por ejemplo -100 = #FF9C 
-		; FF9C + 256 = #9C (1 byte) y #9C es precisamente -100
+		; por ejemplo -100 = &FF9C 
+		; FF9C + 256 = &9C (1 byte) y &9C es precisamente -100
 
 		ld hl, (SPR_coordx)
 		ld bc, 256
@@ -1952,7 +1944,7 @@ PNTS_despues_proyectar
 
 		; calculo del dx a sumar en cada scanline
 		;------------------------------------------
-		; de momento contempla un segmento no tor cido, pues hemos asignado pt2x=pt1x antes de proyectar
+		; de momento contempla un segmento no torcido, pues hemos asignado pt2x=pt1x antes de proyectar
 		; sin embargo tras proyectar, tenemos un dx debido a la proyeccion
 		; el dx lo calcularemos *N, para poder trabajar con enteros y no perder precision
 		; ahora calculo dx=(SPR_coordx-SPR_1x)*N/alto , es decir uso x2-x1 proyectadas
@@ -1978,7 +1970,7 @@ PNTS_despues_proyectar
 		inc hl
 		ld a,1; 1 es dx<0
 
-PNTS_dxpos	; tenemos el dx en HL. dx es la variacion de x tras proyectar un segmento recto (no tor cido)
+PNTS_dxpos	; tenemos el dx en HL. dx es la variacion de x tras proyectar un segmento recto (no torcido)
 		; ojo , este signo puede cambiar cuando sumemos el dx1
 
 		
@@ -2214,10 +2206,10 @@ PNTS_menor_N	ld (PNTS_dxacumul),a
 		; continuamos con la rutina de impresion
 		;---------------------------------------
 		ld A,D
-		add #08; es decir, 2048 (2KB)
+		add &08; es decir, 2048 (2KB)
 
 		ld D,A; suma 2048 y lo mete en d
-		sub #C0; si ahora salta flag acarreo es porque nos hemos pasado al sumar 2048
+		sub &C0; si ahora salta flag acarreo es porque nos hemos pasado al sumar 2048
 	
 		jr nc,PNTS_sig_linea
 		; si llegamos aqui es que ha habido acarreo
@@ -2230,7 +2222,7 @@ PNTS_menor_N	ld (PNTS_dxacumul),a
 	        ; desborda y el nibble superior queda a cero
  	       ; por eso basta sumar c0 y ya estamos en el punto antes de sumar 8 
 		ex de,hl
-		ld bc,#c050 ; #c050 =2048   
+		ld bc,&c050 ; &c050 =2048   
 		add HL,BC   ; le suma el c0 que le ha quitado y el 50
 		ex de,hl
 PNTS_sig_linea
@@ -2304,16 +2296,16 @@ PS2:
 PS2_type
 		ld (FLAG_YMAX),a ; v36 un numero entre 0 y 3 
 		;or a; opt
-		and  %00000001 
+		and a, %00000001 
 		jr nz, PS2_set_orden_total
 		ld (PS2_sort_total), a ; escribe un cero
 		ld (PS2_sort_total+1), a; escribe un cero 
 		ret
 
 PS2_set_orden_total
-		ld a, #20
+		ld a, &20
 		ld (PS2_sort_total), a
-		ld a,#fA
+		ld a,&fA
 		ld (PS2_sort_total+1), a
 		ret
 
@@ -2403,7 +2395,7 @@ PS2_mas		ld a, (PS2_orden)
 
 		; begin v36
 		ld a , (FLAG_YMAX)
-		and %00000010
+		and a,%00000010
 		JR Z, PS2_sortagain
 		CALL _ADD_HEIGHTS
 		; end v36
@@ -2426,7 +2418,7 @@ PS2_sort_total
 
 		; begin v36
 		ld a , (FLAG_YMAX)
-		and %00000010
+		and a,%00000010
 		JR Z, PS2_sortdone
 
 		CALL _SUB_HEIGHTS
@@ -2461,7 +2453,7 @@ ps2_chk3	and a
 		JR z, PS2_all
 		; sincronismo con barrido
 		call _SYNC
-		;call #bd19
+		;call &bd19
 
 
 ; llegamos aqui tras animar y sincronizar con barrido
@@ -2604,6 +2596,19 @@ PS2_fin
 		;ld (flag3D),a
 
 		;v39 he cambiado esto de sitio. ahora la animacion se hace al final
+
+		;begin mejora v41_001		
+		; si venimos desde printsp no hay que animar
+		ld a, (PRINTSP_flag) 
+		and a
+		jr z, PS2_noprintsp
+
+		ld a,0
+		ld (PRINTSP_flag),a
+		ret
+		;end mejora v41_001
+
+PS2_noprintsp
 		ld a, (PS2_flag_anim)
 		and a
 		call NZ, _ANIMA_ALL
@@ -3077,14 +3082,14 @@ _MAP2SP
 		
 		and 64
 		JR NZ, M2S_PNTS_tr
-		ld hl, #B0ED ; ldir
+		ld hl, &B0ED ; ldir
 		ld (pnts_PINTA_NOTRANSP), hl; meto ldir
 		ld (pnts_PINTA_NOTRANSP+2),a; a es cero y por tanto esto es un NOP
 		ret
 
 M2S_PNTS_tr
-		ld a,#cd
-		ld (pnts_PINTA_NOTRANSP), a;#CD ; metemos call
+		ld a,&cd
+		ld (pnts_PINTA_NOTRANSP), a;&CD ; metemos call
 		ld HL, PINTA_SEG_TR
 		ld (pnts_PINTA_NOTRANSP+1), HL ; metemos la direccion del call
 
@@ -3739,6 +3744,8 @@ ROU_leepaso	ld a,(HL); a contiene numero de pasos
 		;ld (ROU_NUM_PASOS),a
 		and a; pone acarreo a cero
 		JR z, ROU_cicla	; si el numero de pasos es cero, es que es indicador de fin=ciclar la ruta
+		; si el numero de pasos es cero, es que es indicador de fin=ciclar la ruta
+		;Jp z, ROU_cicla	; v40_001
 
 	; MEJORA v28. cambio de status, secuencia o imagen en mitad de ruta
 	;------------------------------------------------------------------
@@ -3757,6 +3764,10 @@ ROU_leepaso	ld a,(HL); a contiene numero de pasos
 		;JP ROU_V34
 		cp 251
 		JP Z, ROU_V34;no251
+
+		;JP NZ, ROU_no251; v40_001
+
+
 
 
 ROU_no251
@@ -3821,6 +3832,12 @@ ROU_no253b	; pasamos por aqui si el parametro no es 253
 		ld a, (HL); lee el parametro
 		;pop HL; hl tiene la dir sprite (donde esta justo el estado)
 		;push hl
+
+		;begin v40_001
+		inc hl
+		ld d,(hl); valor del segundo parametro (254,seq,flag)
+		;end v40_001
+
 		ld hl, (ROU_dirsp); v32
 
 		JR Z, ROU_kk1; si es 0 es que es 255 y cambia estado
@@ -3829,6 +3846,22 @@ ROU_no253b	; pasamos por aqui si el parametro no es 253
 
 ROU_off		ld bc, 7; posiciono hl para cambio de secuencia
 		add hl,bc; hl= sprite dir sequence
+
+		;begin v40_001
+		; si el segundo param es 1, entonces reinicio secuencia
+		ld c,a
+		ld a,d
+		cp 1
+		ld a,c
+		jr nz,ROU_kk1
+		
+		inc hl; posicion frame
+		ld (hl),0; valor del segundo parametro (254,seq,flag)
+		dec hl
+		;end v40_001
+		
+
+
 
 ROU_kk1		ld (hl),a; actualiza la secuencia o el estado
 ROU_kkk		ld hl, (ROU_dir); cargo en HL la direccion de esta ruta, que la tengo en ROU_dir
@@ -3895,9 +3928,12 @@ ROU_cicla
 	ld HL, (ROU_dir);direccion de la ruta=direccion del segmento
 ;	ld a,(HL); aqui esta el numero de pasos del segmento cero
 ;	JR ROU_update
-	Jr ROU_leepaso	; v28
-;	Jp ROU_leepaso	; v34
 
+	;Jr ROU_leepaso	; v28
+
+
+
+	jp ROU_leepaso	; v40_001
 
 
 
@@ -4037,7 +4073,7 @@ SOR_bucle	push hl; guardo ant
 		; esto lo hago porque solo se invoca este ordenamiento default al invocar 
 		; la instalacion de comandos RSX
 		dec hl
-SOR_RESET	ld (HL), 0 ; esto es #36 #00
+SOR_RESET	ld (HL), 0 ; esto es &36 &00
 SOR_fin_R	inc hl
 		;------------
 
@@ -4480,8 +4516,8 @@ SET_0a16	ld b,0
 ;RUTINA DE SINCRONISMO _SYNC() (SYN)
 ;=============================================================================================================
 ; esta funcion espera al barrido de pantalla de un modo 
-; mas "correcto" que ra rutina del firmware call #bd19
-; se puede eliminar para ahorrar memoria, reemplazandola por call #bd19, aunque ocupa poco (10 bytes)
+; mas "correcto" que ra rutina del firmware call &bd19
+; se puede eliminar para ahorrar memoria, reemplazandola por call &bd19, aunque ocupa poco (10 bytes)
 ; en caso de cambiarlo, el sitio desde donde se invoca a _SYNC es PRINTSPALL
 _SYNC:
 
@@ -4785,7 +4821,7 @@ _get_dir_sp
 ; microrutina _SALTO_INT() SAL  lee y guarda salto actual de interrupciones 
 ;=============================================================================================================
 ; las interrupciones en 464 y 6128 hacen que la cpu ejecute lo que hay en la 
-; direccion #38. alli hay un JP a una direccion diferente en 464 y 6128
+; direccion &38. alli hay un JP a una direccion diferente en 464 y 6128
 ; tras ejecutar nuestra rutina debemos saltar donde debamos segun el modelo
 sal_dir		dw 0; aqui guardamos la direccion
 sal_done	db 0; flag de direccion guardada
@@ -4796,7 +4832,7 @@ _SALTO_INT
 		;ld a,1
 		inc a ; es lo mismo que ld a,1 en este caso
 		ld (sal_done),a
-		ld hl,(#39); en la 38 hay un jp y en 39 la de salto
+		ld hl,(&39); en la 38 hay un jp y en 39 la de salto
 		ld (sal_dir),hl
 		ld (INS_JP+1), HL; sobreescribe en la direccion del salto
 		ret
@@ -4841,9 +4877,9 @@ sp0		db 1; status, es un byte de flags
 		; 
 		; ejemplos
 		; un sprite que se imprimr con deteccion de colision con otros spries y animacion debe tener 
-		;  status = 1(bit 0)+ 2 (bit1) + 4 (bit 2) =7 =#x0111
+		;  status = 1(bit 0)+ 2 (bit1) + 4 (bit 2) =7 =&x0111
 		; un sprite que se imprime activo sin deteccion de colision con otros y movimiento relativo 
-		;  status = 1(bit 0)+ 0 (bit1) + 0 (bit 2) + 0 (bit 3)+ 16 (bit 4)=17 =#x10001
+		;  status = 1(bit 0)+ 0 (bit1) + 0 (bit 2) + 0 (bit 3)+ 16 (bit 4)=17 =&x10001
 
 		dw 50; coordy puede tomar valores negativos. area visible es[0..79]
 		dw 50; coordx . puede tomar valores negativos. area visible es[0..199]. 
@@ -4893,7 +4929,7 @@ org 27000+512 ; la tabla de sprites ocupa 32 x 16bytes = 512 bytes
 
 ; 
 ;=============================================================================================================
-;RUTINA  INSTALL_RSX() 	RSX este es el call #6b78
+;RUTINA  INSTALL_RSX() 	RSX este es el call &6b78
 ;=============================================================================================================
 ; instala los comandos RSX para usar desde basic
 _INSTALL_RSX
@@ -4938,67 +4974,67 @@ RSX_space	db 0,0,0,0
 RSX_NAMETB	
 
 		defM "PRINTSPAL"
-		db "L"+#80
+		db "L"+&80
 		defM "COLSPAL"
-		db "L"+#80
+		db "L"+&80
 		defM "AUTOAL"
-		db "L"+#80
+		db "L"+&80
 		defM "MOVERAL"
-		db "L"+#80
+		db "L"+&80
 		defM "MAP2S"
-		db "P"+#80
+		db "P"+&80
 		defM "STAR"
-		db "S"+#80
+		db "S"+&80
 		defM "COLA"
-		db "Y"+#80
+		db "Y"+&80
 		defM "SETUPS"
-		db "P"+#80
+		db "P"+&80
 		defM "LOCATES"
-		db "P"+#80
+		db "P"+&80
 		defM "PEE"
-		db "K"+#80
+		db "K"+&80
 		defM "POK"
-		db "E"+#80
+		db "E"+&80
 		defM "ANIM"
-		db "A"+#80
+		db "A"+&80
 		defM "COLS"
-		db "P"+#80
+		db "P"+&80
 		defM "RIN"
-		db "K"+#80
+		db "K"+&80
 		defM "MOVE"; se usa mas que UMAP,ya que UMAP es para usar de vez en cuando
-		db "R"+#80
+		db "R"+&80
 		defM "PRINTS"
-		db "P"+#80
+		db "P"+&80
 		defM "PRINTA"
-		db "T"+#80
+		db "T"+&80
 		;defM "UMA"
-		;db "P"+#80
+		;db "P"+&80
 		;defM "DELS"
-		;db "P"+#80
+		;db "P"+&80
 		defM "AUT"
-		db "O"+#80
+		db "O"+&80
 		defM "ROUTES"
-		db "P"+#80
+		db "P"+&80
 		defM "UMA" ; cambiado orden por routeall, que no se usa
-		db "P"+#80
+		db "P"+&80
 		;defM "ANIMAL"
-		;db "L"+#80; cambiado orden pues animall apenas se usa
+		;db "L"+&80; cambiado orden pues animall apenas se usa
 		defM "ROUTEAL"
-		db "L"+#80
+		db "L"+&80
 		defM "LAYOU"
-		db "T"+#80
+		db "T"+&80
 		;defM "SETUPS"
-		;db "Q"+#80
+		;db "Q"+&80
 		defM "MUSI"
-		db "C"+#80
+		db "C"+&80
 ;		defM "MUSICOF"
-;		db "F"+#80
+;		db "F"+&80
 		defM "SETLIMIT"
-		db "S"+#80
+		db "S"+&80
 		defM "3"
-		db "D"+#80
+		db "D"+&80
 ;		defM "NO"
-;		db "P"+#80
+;		db "P"+&80
 		db 0
 ENDRSX
 _INSTALL_RSX_end
@@ -5088,7 +5124,7 @@ _AT		ld b, (IX+3);es el mas signific.
 ;RUTINA  _PRINT_SPRITE(id,y,x) (PSP)
 ;=============================================================================================================
 ;
-;  call #XXXX,<sprite_number>,<y>,<x>
+;  call &XXXX,<sprite_number>,<y>,<x>
 ; o bien call DDDD,<sprite_number>,<y>,<x>
 ;    coordenada y entre [0,199] acepta negativos
 ;    coordenada x entre [0,79] acepta negativos
@@ -5136,6 +5172,7 @@ PSP:; RUTINA PSP
 
 ;		cp 1;1 parametro es que no trae coordenadas
 ;		JR Z,PSP_sp
+		
 
 		cp 1; no se puede hacer dec a
 		JR Z,PSP_sp; 1param
@@ -5178,6 +5215,9 @@ PSP_confTR
 
 PSP_sp
 		ld (PS2_spid), a; meto un 1 para que PRINTSPALL solo imprima 1
+
+		ld (PRINTSP_flag),a; V41_001 flag para que printspall no anime
+
 		;CALL _GET_MODE ; v34
 		ld a,(IX+0)
 
@@ -5694,7 +5734,7 @@ PSP_finclippling:
 		;   eleccion entre los 4 tipos de impresion PNT_NORMAL,PNT_FLIPN,PNT_TRANSP,PNT_FLIP_TRANSP
 		; --------------------------------------------------------------------------------------
 		ld a, (SPR_status);										
-		and  %1000000; flag de sobrescritura								
+		and a, %1000000; flag de sobrescritura								
 		;JR NZ, PSP_owr;	//"owr" es "overwrite"	
 		JR Z,PSP_NORMAL
 		              
@@ -5780,9 +5820,9 @@ COP
 		add a,h
 		ld h,a
 		;---------------------------------------
-COP_nosuma	; me queda sumar #c000 y la coordenada x. 
+COP_nosuma	; me queda sumar &c000 y la coordenada x. 
 		; lo hago a la vez sumando c0xx
-		ld b, #c0
+		ld b, &c0
 		ld a, (SPR_coordx)
 		ld c,a
 		add HL, bc
@@ -5854,10 +5894,10 @@ PNT_PAINTED
 
         	pop DE; saco pant, como si no hubiese sumado el ancho
 		ld A,D
-		add #08; es decir, 2048 (2KB)
+		add &08; es decir, 2048 (2KB)
 
 		ld D,A; suma 2048 y lo mete en d
-		sub #C0; si ahora salta flag acarreo es porque nos hemos pasado al sumar 2048
+		sub &C0; si ahora salta flag acarreo es porque nos hemos pasado al sumar 2048
 	
 		jr nc,PNT_sig_linea
 		; si llegamos aqui es que ha habido acarreo
@@ -5870,7 +5910,7 @@ PNT_PAINTED
 	        ; desborda y el nibble superior queda a cero
  	       ; por eso basta sumar c0 y ya estamos en el punto antes de sumar 8 
 		ex de,hl
-		ld bc,#c050 ; #c050 =2048   
+		ld bc,&c050 ; &c050 =2048   
 		add HL,BC   ; le suma el c0 que le ha quitado y el 50
 		ex de,hl
 PNT_sig_linea
@@ -5900,7 +5940,7 @@ PNT_TRANSP
 PTR2_scanh
 		ld a, (HL); 2 pixels del sprite
 		ld c, a; guarda  pixel en C		
-PTR2_bin1	and %11000000; o bien %11001100
+PTR2_bin1	and a,%11000000; o bien %11001100
 		JR Z,PTR2_fondo; todo ceros es para reestablecer el fondo en los 2 pixels transp o no transp
 		; NOTA he observado que siembre salta a PTR_fondo porque pinto con colores que no usan los bits de fondo
 		; pero si hubiese color 1, entonces se usaria para redondear el contorno de sprites
@@ -5908,32 +5948,32 @@ PTR2_bin2	cp %11000000; si los dos son 1, entonces no hacemos nada, no hay que r
 		JR Z,PTR2_transp; 
 
 		
-		; si estamos aqui es porque solo 1 bit esta a uno
+		; si estamos aqui es porque solo 1 bit esta a uno (solo un pixel del byte en mode 0)
 		ld a,c
-		bit 6,c; comprueba el bit 6 
+		bit 6,c; comprueba el bit 6 (pixel derecho mode 0)
 		JR Z, PTR2_izq
 		; si estoy aqui es que ese bit no es cero y por lo tanto el pixel a pintar debe ser el de pantalla
 		; es decir, no alterar nada
 		res 6,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and  %01010101; pixel derecho de la pantalla. cojo lo que tenga,incluido el fondo
-		or c; no modifico los 1's del pixel izq del sprite, almacenados en c
+		and a, %01010101; pixel derecho de la pantalla. cojo lo que tenga,incluido el fondo
+		or  a,c; no modifico los 1's del pixel izq del sprite, almacenados en c
 		ld c,a
 
 		JR PTR2_fondo ; v39
 
 PTR2_izq 	res 7,c 
 		ld a, (DE)
-		and  %10101010; pixel izq de la pantalla
-		or c
+		and a, %10101010; pixel izq de la pantalla
+		or a,c
 		ld c,a
 
 
 		
 PTR2_fondo	ld a, (DE); (DE) contiene el fondo "manchado" con restos del sprite en el frame anterior
-PTR2_bin3	and %11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
+PTR2_bin3	AND A,%11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
 		; el orden es 00221133	
-		or c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
+		or a,c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
 
 PTR2_pinta	ld (DE), a
 
@@ -5972,7 +6012,7 @@ PNTF_scanh
 		or c
 		ld c,a
 
-PNTF_bin1	and %11000000; o bien %11001100
+PNTF_bin1	and a,%11000000; o bien %11001100
 		JR Z,PNTF_fondo; todo ceros es para reestablecer el fondo en los 2 pixels transp o no transp
 		; NOTA he observado que siembre salta a PTR_fondo porque pinto con colores que no usan los bits de fondo
 		; pero si hubiese color 1, entonces se usaria para redondear el contorno de sprites
@@ -5987,20 +6027,20 @@ PNTF_bin2	cp %11000000; si los dos son 1, entonces no hacemos nada, no hay que r
 		; es decir, no alterar nada
 		res 6,c; lo pongo a cero
 		ld a, (DE); leo la pantalla
-		and  %01010101; pixel derecho de la pantalla. cojo lo que tenga,incluido el fondo
-		or c; no modifico los 1's del pixel izq del sprite, almacenados en c
+		and a, %01010101; pixel derecho de la pantalla. cojo lo que tenga,incluido el fondo
+		or  a,c; no modifico los 1's del pixel izq del sprite, almacenados en c
 		ld c,a
 
 PNTF_izq 	res 7,c 
 		ld a, (DE)
-		and  %10101010; pixel derecho de la pantalla
-		or c
+		and a, %10101010; pixel derecho de la pantalla
+		or a,c
 		ld c,a
 		
 PNTF_fondo	ld a, (DE); (DE) contiene el fondo "manchado" con restos del sprite en el frame anterior
-PNTF_bin3	and %11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
+PNTF_bin3	AND A,%11000000; bin %11100110 192 (192 es 128+64, es decir los dos 1). en total 230 192 , o bien  %11001100
 		; el orden es 00221133	
-		or c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
+		or a,c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
 
 PNTF_pinta	ld (DE), a
 
@@ -6081,7 +6121,7 @@ PNTFN_transp	inc de
 ; variables locales de _MUSIC_ON()
 ;-------------------------------------
 ;INS_counter	db 0;ultimo instante en que se toco la musica. de una invocacion a otra hay que mantener este valor
-; esta no existe	;INS_model	dw #B939; model 464=>#B939 ,model 6128=> #B941. al instalar la interrupcion se corrige solo.
+; esta no existe	;INS_model	dw &B939; model 464=>&B939 ,model 6128=> &B941. al instalar la interrupcion se corrige solo.
 ;INS_cancion	db 0
 ;INS_speed	db 5; una velocidad "normal" es 6. si ponemos 5 estamos acelerando un poco la musica
 
@@ -6127,17 +6167,17 @@ INS:
 		ld a,(ix+4)
 		ld (INS_LOOP),a
 
-		call player; aqui se pone INTERR a 12
+		call player; aqui se pone INTERR a &12, que es 18 en decimal. INTERR tiene 5 bits  = loop,sfx,efectos,player,carga =10010 =18
 
 		ld a, (INS_LOOP)
 		or a
 		JR Z, INS_init
-		ld a,2
+		ld a,2  ; es igual pero sin el bit de loop (18-16 =2)
 		ld (INTERR),a
 		
 		;IM 1; no hace falta. by default asi es
-INS_init	ld hl,INS_rutina;// #b939;interrupt_callback
-		ld ( #39 ), hl; en la #38 esta el jp  y en la #39 la direccion a la que vamos
+INS_init	ld hl,INS_rutina;// &b939;interrupt_callback
+		ld ( &39 ), hl; en la &38 esta el jp  y en la &39 la direccion a la que vamos
 
 		ei
 		ret
@@ -6164,7 +6204,7 @@ INS_rutina:
 		LD a, (INS_counter); ultima vez que se toco
 		ld b,a
 		
-		call #bd0d; TIME PLEASE. DEHL contiene el time en 1/300 fracciones de segundo. cada 6 son 50ms
+		call &bd0d; TIME PLEASE. DEHL contiene el time en 1/300 fracciones de segundo. cada 6 son 50ms
 
 		ld a, l
 		sub b; a-b . Tnow-Tlast =possitive number.
@@ -6189,7 +6229,7 @@ INS_rutina:
 
 
 		;ld a, 65
-		;CALL #BB5D ; esto simplemente es un experimento. imprime una "A" periodicamente
+		;CALL &BB5D ; esto simplemente es un experimento. imprime una "A" periodicamente
 
 tocar		
 		call INICIO; invoca al player de musica
@@ -6217,9 +6257,9 @@ INS_fin:
 		pop af
 
 
-		; este salto se machaca gracias a la rutina _SALTO_INT por eso aqui pongo #0000
+		; este salto se machaca gracias a la rutina _SALTO_INT por eso aqui pongo &0000
 		;ret ; y si me lo cargo?
-INS_JP		JP #0000 ;#B939;; CPC 464, en CPC6128 hay que ir a #b941
+INS_JP		JP &0000 ;&B939;; CPC 464, en CPC6128 hay que ir a &b941
 		ret
 
 
@@ -6303,9 +6343,10 @@ ANS_nomacro
 
 		;ld b,0
 		;ld c, 0
+
+		; si hl es cero es porque no tenia direccion de imagen asignada. por eso el jr z
+		; asi una secuencia puede tener menos de 8 frames
 		ld bc, 0
-
-
 		adc HL,bc
 		Jr z, ANS_fin_seq 	
 		
@@ -6331,17 +6372,19 @@ ANS_nextframe	; aqui llegamos con la variable de nuevo frame id rellena y
 		JR NZ,ANS_nomuerte
 
 		; si estamos aqui es secuencia muerte
-		;ld a, (IX+0); sprite id
-		;call _get_dir_sp
 		ld HL, (ANS_spaddress)
-		;xor a ;status cero
-		;ld (HL),a
-		ld (HL),0 ; opt
+		ld (hl),0; status cerp
+		;tras secuencia muerte ponemos frame id  cero v40_001
+		ld bc,8; v40_001
+		add hl, bc; v40_001
+		ld (hl),0;tras secuencia muerte ponemos frame id  cero  ; v40_001
+
+
 		ret
 
 
 ANS_nomuerte	ld HL, (ANS_spaddress)
-		ld bc , sp_frame_offset
+		ld bc , sp_frame_offset ; esta constante vale 8
 		add hl, bc
 		ld a, (ANS_newframeid)
 		ld (HL), a; frame id actualizado en la tabla de sprites
@@ -6417,7 +6460,7 @@ LAY_PAT2	call LAY_update_map
 		Jr Z, LAY_next
 		;-------begin rutina impresion brick----------		
 		push hl	
-		;call #bb5d
+		;call &bb5d
 		;pop hl
 		push ix; ix original de la llamada
 		ld ix,LAY_buffer; espacio para almacenar parametros. 
@@ -8190,7 +8233,7 @@ ink_noparam	; recogida de step
 		ld a, (ink_index)
 		add b ;b tiene el step
 ink_and1	
-		;and  %111; si index+step se sale de rango pues nos colocamos al ppio con aritmetica modular
+		;and a, %111; si index+step se sale de rango pues nos colocamos al ppio con aritmetica modular
 ink_nc1		and a
 		cp d
 		JR C, INK_menor
@@ -8243,7 +8286,7 @@ INK_menor2
 		ld c,b
 		; comando ink
 		ld a,(ink_cambiar)
-		call #bc32; rutina de firmware de cambio de tinta
+		call &bc32; rutina de firmware de cambio de tinta
 		; se destruye AF,BC,DE HL
 		ld a,(ink_patron_len); len 		
 		ld d,a
@@ -8490,7 +8533,7 @@ PINTA_SEG_TR
 PSTR_scanh
 		ld a,(HL) ; 2 pix de sprite
 		ld c,a 
-PSTR_bin1	and %11000000; o bien %11001100
+PSTR_bin1	and a,%11000000; o bien %11001100
 		jr z, PSTR_fondo
 PSTR_bin2	cp %11001100
 		jr z,PSTR_transp
@@ -8501,15 +8544,15 @@ PSTR_der
 		jr z, PSTR_izq
 		res 6,c
 		ld a,(de)
-		and  %01010101; pix der
-		or c
+		and a, %01010101; pix der
+		or a,c
 		ld c,a
 		jr PSTR_fondo
 PSTR_izq	
 		res 7,c
 PSTR_fondo	ld a,(DE); (DE) contiene el fondo
-PSTR_bin3	and %11000000
-		or c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
+PSTR_bin3	and a,%11000000
+		or a,c; OR del pixel con el fondo (fondo en "A" y pixel en "C")
 
 PSTR_pinta	ld (DE),a
 PSTR_transp	inc de
@@ -8527,4 +8570,40 @@ _CALL_COMBINADO; no merece la pena
 	xor a
 	call _colspall
 	ret
+
+;------------------ viene de routesp
+ROU_V34
+	ld a, (ROU_SPID)
+	CALL ANS_a
+	jP ROU_kkk
+
+ROU_INIRUTA
+	; venimos desde _UPDATE_SEGMENT porque se ha detectado un comienzo de ruta
+	ld a,255; asi al sumar un 1 pasara a cero
+	ld (ROU_SEG),a
+	xor a; nuevo paso
+	;JR _UPDATE_SEGMENT
+	Jp _UPDATE_SEGMENT ; v28
 	
+
+
+
+
+; variables locales de colspall
+;------------------------------
+COA_colider	dw 0; direccion de memoria de colider
+
+; variables locales de colay
+;------------------------------
+COL_umbral	db 32; por defecto es el espacio en blanco " ", cuyo ASCII es 32
+var_col		dw 0; //direccion de la variable col
+col_numsp	db 0; guardamos el id sprite de una llamada a la siguiente para ganar velocidad v37
+
+; variables de la funcion SET_LIMITS
+;-------------------------------------
+SPR_DIFX	db 80
+SPR_DIFY	db 200
+
+; variables de autoall
+;-----------------------------------
+MOA_flag_route	db 0; flag de invocacion a ROUTEALL

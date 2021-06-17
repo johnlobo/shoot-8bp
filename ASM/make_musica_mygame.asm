@@ -4,7 +4,7 @@
 ; 
 ; tras ensamblarlo, salvalo con save "musica.bin",b,32200,1400 
 
-org 32200 ; hasta 33500 tenemos 1.3KB desde v32
+org 32200 ; hasta 33600 tenemos 1.4KB desde v32
 ;--------------------MUSICA------------------------------------
 ; tiene la limitacion de tan solo poder incluir un solo fichero de 
 ; instrumentos para todas las canciones
@@ -12,15 +12,16 @@ org 32200 ; hasta 33500 tenemos 1.3KB desde v32
 ; instrumentos en un solo fichero.
 
 ;archivo de instrumentos. OJO TIENE QUE SER SOLO UNO
-read	"../MUSIC/montoya7_v2.mus.asm" ;
+read	"../MUSIC/marcha3.mus.asm" ;
+
 ; archivos de musica
 SONG_0:
-INCBIN	"../MUSIC/montoya7_v2.mus" ;
+INCBIN	"../MUSIC/marcha3.mus" ;
 SONG_0_END:
 
 
 SONG_1:
-INCBIN	"../MUSIC/sin_canal_c.mus" ;
+;INCBIN	"../MUSIC/otracancion.mus" ;
 SONG_1_END:
 
 SONG_2:
