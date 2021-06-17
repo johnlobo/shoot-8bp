@@ -10,32 +10,33 @@ IMAGE_LIST
 ; no hace falta que la lista tenga 255 elementos. es de longitud variable, incluso puede estar vacia
 ;----------------------------------------------------------------------------------------------
 
-dw G_ship00_0;16
-dw G_bullet0;17
-dw G_explosion_0;18
-dw G_explosion_1;19
-dw G_explosion_2;20
-dw G_explosion_3;21
-dw G_explosion_4;22 
-dw G_heart;23
-dw G_green_flag;24
-dw G_red_flag;25
-dw G_skull_still;26
-dw G_skull_left0;27
-dw G_skull_left1;28
-dw G_skull_right0;29
-dw G_skull_right1;30
-dw G_baddie_shot;31
-dw G_black4x8;32
-dw G_black8x14;33
-dw G_baddie_ship_0;33
-dw G_baddie_ship_1;35
-dw G_baddie_ship_2;36
-dw G_baddie_ship_3;37
-dw G_baddie_ship_4;38
-dw G_baddie_ship_5;39
-dw G_baddie_ship_6;40
-dw G_baddie_ship_7;41
+dw G_ship00_0       ;16
+dw G_bullet0        ;17
+dw G_explosion_0    ;18
+dw G_explosion_1    ;19
+dw G_explosion_2    ;20
+dw G_explosion_3    ;21
+dw G_explosion_4    ;22 
+dw G_heart          ;23
+dw G_green_flag     ;24
+dw G_red_flag       ;25
+dw G_skull_still    ;26
+dw G_skull_left0    ;27
+dw G_skull_left1    ;28
+dw G_skull_right0   ;29
+dw G_skull_right1   ;30
+dw G_baddie_shot    ;31
+dw G_black1x12      ;32
+dw G_black4x8       ;33
+dw G_black8x14      ;34
+dw G_baddie_ship_0  ;35
+dw G_baddie_ship_1  ;36
+dw G_baddie_ship_2  ;37
+dw G_baddie_ship_3  ;38
+dw G_baddie_ship_4  ;39
+dw G_baddie_ship_5  ;40
+dw G_baddie_ship_6  ;41
+dw G_baddie_ship_7  ;42
 
 ; ahora las imagenes
 ;=================================================
@@ -62,114 +63,10 @@ _BEGIN_IMAGES
 ;=================================================
 
 ;------ BEGIN SPRITE --------
-DISPARO
-db 6 ; ancho
-db 10 ; alto
-db 0,0 , 0 , 0 , 0 ,0
-db 0,0 , 0 , 0 , 0 ,0
-db 0,0 , 0 , 0 , 0 ,0
-db 0,0 , 0 , 0 , 0 ,0
-db 0,0 , 0 , 0 , 0 ,0
-db 0,0 , 16 , 32 , 0 ,0
-db 0,0 , 100 , 152 , 0 ,0
-db 0,0 , 100 , 152 , 0 ,0
-db 0,0 , 100 , 152 , 0 ,0
-db 0,0 , 16 , 32 , 0 ,0
-
-;------ END SPRITE --------
-;------ BEGIN SPRITE --------
-SOLDADO_R0
-db 6 ; ancho
-db 24 ; alto
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 48 , 48 , 0 , 0 
-db 0 , 16 , 56 , 48 , 32 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 12 , 36 , 112 , 240 , 0 
-db 0 , 164 , 240 , 229 , 207 , 0 
-db 0 , 69 , 207 , 207 , 207 , 0 
-db 0 , 80 , 207 , 207 , 218 , 0 
-db 0 , 0 , 229 , 207 , 248 , 0 
-db 0 , 0 , 80 , 240 , 240 , 0 
-db 0 , 16 , 48 , 48 , 80 , 0 
-db 0 , 16 , 37 , 48 , 90 , 0 
-db 0 , 16 , 15 , 26 , 79 , 0 
-db 0 , 16 , 37 , 48 , 79 , 0 
-db 0 , 0 , 37 , 37 , 0 , 0 
-db 0 , 0 , 48 , 37 , 0 , 0 
-db 0 , 0 , 16 , 15 , 0 , 0 
-db 0 , 0 , 32 , 16 , 32 , 0 
-db 0 , 0 , 48 , 16 , 48 , 0 
-db 0 , 0 , 60 , 60 , 60 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0
-;------ END SPRITE --------
-;------ BEGIN SPRITE --------
-SOLDADO_R1
-db 6 ; ancho
-db 24 ; alto
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 48 , 48 , 0 , 0 
-db 0 , 16 , 56 , 48 , 32 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 240 , 240 , 0 
-db 0 , 88 , 240 , 229 , 218 , 0 
-db 0 , 164 , 207 , 207 , 207 , 0 
-db 0 , 69 , 207 , 207 , 207 , 0 
-db 0 , 80 , 207 , 207 , 218 , 0 
-db 0 , 0 , 229 , 207 , 248 , 0 
-db 0 , 16 , 48 , 48 , 240 , 0 
-db 0 , 16 , 37 , 48 , 80 , 0 
-db 0 , 16 , 15 , 26 , 79 , 0 
-db 0 , 16 , 37 , 48 , 79 , 0 
-db 0 , 80 , 37 , 37 , 90 , 0 
-db 0 , 0 , 48 , 37 , 0 , 0 
-db 0 , 0 , 176 , 15 , 0 , 0 
-db 0 , 48 , 80 , 15 , 176 , 0 
-db 0 , 48 , 160 , 80 , 48 , 0 
-db 0 , 16 , 112 , 16 , 112 , 0 
-db 0 , 0 , 60 , 60 , 60 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0 
-;------ END SPRITE --------
-;------ BEGIN SPRITE --------
-SOLDADO_R2
-db 6 ; ancho
-db 24 ; alto
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 48 , 48 , 0 , 0 
-db 0 , 16 , 56 , 48 , 32 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 52 , 48 , 48 , 48 , 0 
-db 0 , 12 , 36 , 112 , 240 , 0 
-db 0 , 164 , 240 , 229 , 207 , 0 
-db 0 , 69 , 207 , 207 , 207 , 0 
-db 0 , 80 , 207 , 207 , 218 , 0 
-db 0 , 0 , 229 , 207 , 248 , 0 
-db 0 , 0 , 80 , 240 , 240 , 0 
-db 0 , 16 , 48 , 48 , 80 , 0 
-db 0 , 16 , 37 , 48 , 90 , 0 
-db 0 , 16 , 15 , 26 , 90 , 0 
-db 0 , 16 , 37 , 48 , 90 , 0 
-db 0 , 0 , 37 , 37 , 0 , 0 
-db 0 , 0 , 48 , 37 , 138 , 0 
-db 0 , 0 , 16 , 79 , 138 , 0 
-db 0 , 0 , 0 , 0 , 0 , 0 
-db 0 , 0 , 16 , 32 , 0 , 0 
-db 0 , 0 , 16 , 32 , 0 , 0 
-db 0 , 0 , 16 , 48 , 0 , 0 
-;------ END SPRITE --------
 
 G_ship00_0
 db 7 ; ancho
-db 18 ; alto
-db	#00, #00, #00, #00, #00, #00, #00
-db	#00, #00, #00, #00, #00, #00, #00
+db 14 ; alto
 db	#00, #00, #00, #aa, #00, #00, #00
 db	#00, #00, #00, #aa, #00, #00, #00
 db	#00, #00, #00, #aa, #00, #00, #00
@@ -184,8 +81,7 @@ db	#00, #40, #ea, #f7, #ff, #00, #00
 db	#00, #d5, #ea, #ff, #d5, #aa, #00
 db	#00, #c0, #62, #ff, #62, #80, #00
 db	#00, #00, #2a, #aa, #2a, #00, #00
-db	#00, #00, #00, #00, #00, #00, #00
-db	#00, #00, #00, #00, #00, #00, #00
+
 
 G_bullet0
 db 1 ; ancho
@@ -299,7 +195,7 @@ db #00, #00, #00, #00, #00, #00, #00, #00
 db #00, #00, #00, #00, #00, #00, #00, #00
 db #00, #00, #00, #00, #00, #00, #00, #00
 
-;; Black 4x8
+;; Black 1x12
 G_black1x12
 db 1 ; ancho
 db 12 ; alto
@@ -329,6 +225,7 @@ db #00, #00, #00, #00
 db #00, #00, #00, #00
 db #00, #00, #00, #00
 
+;; Black 8x14
 G_black8x14
 db 8 ; ancho
 db 18 ; alto 
@@ -351,10 +248,7 @@ db #00, #00, #00, #00, #00, #00, #00, #00
 db #00, #00, #00, #00, #00, #00, #00, #00 
 db #00, #00, #00, #00, #00, #00, #00, #00 
 
-;;
 ;; Heart
-;;
-
 G_heart
 db 3 ; ancho
 db 5 ; alto
@@ -364,10 +258,7 @@ db #11, #33, #00
 db #00, #22, #00
 db #00, #22, #00
 
-;;
-;; Flags
-;;
-
+;; Green Flag
 G_green_flag
 db 2 ; ancho
 db 5 ; alto
@@ -377,6 +268,7 @@ db #83, #57
 db #00, #55
 db #00, #55
 
+;; Red Flag
 G_red_flag
 db 2 ; ancho
 db 5 ; alto
@@ -386,10 +278,7 @@ db #33, #77
 db #00, #55
 db #00, #55
 
-;;
-;; Skull
-;;
-
+;; Skull still
 G_skull_still
 db 8 ; ancho
 db 14 ; alto
@@ -408,6 +297,7 @@ db #00, #00, #00, #00, #00, #00, #00, #00
 db #00, #00, #00, #00, #00, #00, #00, #00 
 db #00, #00, #00, #00, #00, #00, #00, #00 
 
+;; Skull Left0
 G_skull_left0
 db 8 ; ancho
 db 14 ; alto
@@ -426,6 +316,7 @@ db #00, #00, #00, #00, #00, #00, #00, #00
 db #00, #00, #00, #00, #00, #00, #00, #00 
 db #00, #00, #00, #00, #00, #00, #00, #00 
 
+;; Skull Left1
 G_skull_left1
 db 8 ; ancho
 db 14 ; alto
