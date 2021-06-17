@@ -9,31 +9,6 @@ IMAGE_LIST
 ; podemos usar hasta 255 imagenes especificadas de este modo 
 ; no hace falta que la lista tenga 255 elementos. es de longitud variable, incluso puede estar vacia
 ;----------------------------------------------------------------------------------------------
-<<<<<<< HEAD
-dw SOLDADO_R0; 16
-dw SOLDADO_R1;17 piernas abiertas
-dw SOLDADO_R2;18
-dw DISPARO;19
-dw G_ship00_0;20
-dw G_bullet0;21
-dw G_explosion_0;22
-dw G_explosion_1;23
-dw G_explosion_2;24
-dw G_explosion_3;25
-dw G_explosion_4;26 
-dw G_heart;27
-dw G_green_flag;28
-dw G_red_flag;29
-dw G_skull_still;30
-dw G_skull_left0;31
-dw G_skull_left1;32
-dw G_skull_right0;33
-dw G_skull_right1;34
-dw G_baddie_shot;35
-dw G_black1x12;36
-dw G_black4x8;37
-dw G_black8x14;38
-=======
 
 dw G_ship00_0;16
 dw G_bullet0;17
@@ -61,7 +36,6 @@ dw G_baddie_ship_4;38
 dw G_baddie_ship_5;39
 dw G_baddie_ship_6;40
 dw G_baddie_ship_7;41
->>>>>>> 4aad1d317d9e0460fb8e86ffecdb9aa9b3b44651
 
 ; ahora las imagenes
 ;=================================================
